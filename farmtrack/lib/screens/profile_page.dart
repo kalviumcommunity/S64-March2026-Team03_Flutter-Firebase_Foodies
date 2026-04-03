@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/constants.dart';
+import '../services/auth_service.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -70,7 +71,9 @@ class ProfilePage extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await AuthService().signOut();
+                  },
                   icon: const Icon(Icons.logout, color: AppColors.alertRed),
                   label: const Text('Log Out',
                       style: TextStyle(color: AppColors.alertRed)),
