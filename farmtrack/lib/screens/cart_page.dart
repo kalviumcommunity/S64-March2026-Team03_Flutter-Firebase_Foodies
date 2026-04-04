@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../utils/constants.dart';
 import '../services/cart_service.dart';
+import '../services/order_service.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({Key? key}) : super(key: key);
@@ -171,7 +172,18 @@ class CartPage extends StatelessWidget {
                     ],
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      final orderProvider = Provider.of<OrderService>(context, listen: false);
+                      orderProvider.createOrder(cartService.items, cartService.getTotalPrice());
+                      cartService.clearCart();
+                      
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Order placed successfully!'),
+                          backgroundColor: AppColors.primaryGreen,
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryGreen,
                       padding:

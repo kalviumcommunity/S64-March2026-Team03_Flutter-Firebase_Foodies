@@ -55,4 +55,9 @@ class CartService extends ChangeNotifier {
     }
     return total;
   }
+
+  void clearCart() {
+    _items.clear();
+    notifyListeners();
+  }
 }

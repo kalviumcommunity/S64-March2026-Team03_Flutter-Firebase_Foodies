@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/constants.dart';
 import '../services/auth_service.dart';
+import 'orders_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -55,7 +56,12 @@ class ProfilePage extends StatelessWidget {
               const SizedBox(height: 32),
               
               // Settings List
-              _buildProfileOption(Icons.shopping_bag_outlined, 'My Orders'),
+              _buildProfileOption(Icons.shopping_bag_outlined, 'My Orders', onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const OrdersPage()),
+                );
+              }),
               const Divider(height: 1),
               _buildProfileOption(Icons.location_on_outlined, 'Delivery Addresses'),
               const Divider(height: 1),
@@ -92,7 +98,7 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileOption(IconData icon, String title) {
+  Widget _buildProfileOption(IconData icon, String title, {VoidCallback? onTap}) {
     return ListTile(
       leading: Icon(icon, color: AppColors.primaryGreen),
       title: Text(
@@ -104,7 +110,7 @@ class ProfilePage extends StatelessWidget {
       ),
       trailing:
           const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-      onTap: () {},
+      onTap: onTap ?? () {},
       contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
     );
   }
