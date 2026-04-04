@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/order.dart';
 import '../utils/constants.dart';
+import '../services/order_service.dart';
 
 class OrderDetailsPage extends StatelessWidget {
   final Order order;
@@ -24,9 +26,6 @@ class OrderDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateStr = '${order.createdAt.day}/${order.createdAt.month}/${order.createdAt.year} ${order.createdAt.hour}:${order.createdAt.minute.toString().padLeft(2, '0')}';
-    final shortId = order.id.substring(order.id.length > 6 ? order.id.length - 6 : 0);
-
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
       appBar: AppBar(
@@ -37,36 +36,53 @@ class OrderDetailsPage extends StatelessWidget {
         iconTheme: const IconThemeData(color: AppColors.textPrimary),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppConstants.defaultPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeaderCard(shortId, dateStr),
-              const SizedBox(height: 24),
-              
-              const Text('Track Order', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-              const SizedBox(height: 16),
-              _buildTimelineCard(),
-              const SizedBox(height: 24),
+        child: StreamBuilder<Order?>(
+          stream: Provider.of<OrderService>(context, listen: false).getOrderStream(order.id),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator(color: AppColors.primaryGreen));
+            }
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}', style: const TextStyle(color: Colors.red)));
+            }
 
-              const Text('Items', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-              const SizedBox(height: 16),
-              _buildItemsCard(),
-              const SizedBox(height: 24),
+            final currentOrder = snapshot.data ?? order;
 
-              const Text('Delivery Info', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-              const SizedBox(height: 16),
-              _buildDeliveryInfoCard(),
-              const SizedBox(height: 24),
-            ],
-          ),
+            final dateStr = '${currentOrder.createdAt.day}/${currentOrder.createdAt.month}/${currentOrder.createdAt.year} ${currentOrder.createdAt.hour}:${currentOrder.createdAt.minute.toString().padLeft(2, '0')}';
+            final shortId = currentOrder.id.substring(currentOrder.id.length > 6 ? currentOrder.id.length - 6 : 0);
+
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(AppConstants.defaultPadding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeaderCard(currentOrder, shortId, dateStr),
+                  const SizedBox(height: 24),
+                  
+                  const Text('Track Order', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                  const SizedBox(height: 16),
+                  _buildTimelineCard(currentOrder),
+                  const SizedBox(height: 24),
+
+                  const Text('Items', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                  const SizedBox(height: 16),
+                  _buildItemsCard(currentOrder),
+                  const SizedBox(height: 24),
+
+                  const Text('Delivery Info', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                  const SizedBox(height: 16),
+                  _buildDeliveryInfoCard(),
+                  const SizedBox(height: 24),
+                ],
+              ),
+            );
+          }
         ),
       ),
     );
   }
 
-  Widget _buildHeaderCard(String shortId, String dateStr) {
+  Widget _buildHeaderCard(Order currentOrder, String shortId, String dateStr) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -105,7 +121,7 @@ class OrderDetailsPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Total Amount', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16)),
-              Text('₹${order.totalPrice.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20)),
+              Text('₹${currentOrder.totalPrice.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20)),
             ],
           ),
         ],
@@ -113,14 +129,14 @@ class OrderDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTimelineCard() {
+  Widget _buildTimelineCard(Order currentOrder) {
     final stages = [
       {'title': 'Order Placed', 'icon': Icons.receipt_long},
       {'title': 'Packed', 'icon': Icons.inventory_2_outlined},
       {'title': 'Out for Delivery', 'icon': Icons.local_shipping_outlined},
       {'title': 'Delivered', 'icon': Icons.check_circle_outline},
     ];
-    int currentIndex = _getStepIndex(order.status);
+    int currentIndex = _getStepIndex(currentOrder.status);
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -209,7 +225,7 @@ class OrderDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildItemsCard() {
+  Widget _buildItemsCard(Order currentOrder) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -218,8 +234,8 @@ class OrderDetailsPage extends StatelessWidget {
         border: Border.all(color: Colors.grey.shade200),
       ),
       child: Column(
-        children: order.items.map((item) {
-          final isLast = order.items.last == item;
+        children: currentOrder.items.map((item) {
+          final isLast = currentOrder.items.last == item;
           return Column(
             children: [
               Row(
