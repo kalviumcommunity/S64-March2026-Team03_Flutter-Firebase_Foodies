@@ -132,22 +132,23 @@ class _PaymentScreenState extends State<PaymentScreen>
         'paymentMethod': paymentService.selectedMethod!.firestoreKey,
       };
 
-      final firestoreService = FirestoreService();
-      final orderId = await firestoreService.addOrder(orderData).timeout(
+      // Explicit Firestore Service allocation to resolve compiler inference issues
+      final FirestoreService firestoreService = FirestoreService();
+      final String orderId = await firestoreService.addOrder(orderData).timeout(
             const Duration(seconds: 10),
             onTimeout: () => throw Exception(
                 'Connection timed out. Check your internet connection.'),
           );
+
+      // Capture necessary data before clearing state
+      final selectedMethodLabel = paymentService.selectedMethod!.label;
+      final totalPrice = cartService.getTotalPrice();
 
       // Clear cart before any navigation
       cartService.clearCart();
 
       if (mounted) {
         setState(() => _isProcessing = false);
-
-        // Capture necessary data before clearing state
-        final selectedMethodLabel = paymentService.selectedMethod!.label;
-        final totalPrice = cartService.getTotalPrice();
 
         // Replace checkout flow with confirmation screen
         Navigator.of(context).pushAndRemoveUntil(
@@ -442,7 +443,6 @@ class _PaymentScreenState extends State<PaymentScreen>
   }
 
   // ── Bottom bar ──────────────────────────────────────────────────────────
-  // NOTE: theme is read fresh inside the Consumer so it's never stale.
   Widget _buildBottomBar() {
     return Consumer<PaymentService>(
       builder: (context, paymentService, _) {
@@ -504,5 +504,3 @@ class _PaymentScreenState extends State<PaymentScreen>
     );
   }
 }
-
-
