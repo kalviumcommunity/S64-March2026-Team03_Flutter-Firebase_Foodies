@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../utils/constants.dart';
 import '../widgets/category_card.dart';
+import 'package:provider/provider.dart';
+import '../providers/category_provider.dart';
+import '../providers/navigation_provider.dart';
 
 class CategoriesPage extends StatelessWidget {
   const CategoriesPage({Key? key}) : super(key: key);
@@ -59,13 +62,12 @@ class CategoriesPage extends StatelessWidget {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text(
-          'Categories',
-          style: AppTextStyles.headerText,
+          'All Categories',
+          style: AppTextStyles.sectionTitle,
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         centerTitle: true,
         elevation: 0,
-        scrolledUnderElevation: 0,
       ),
       body: SafeArea(
         child: GridView.builder(
@@ -84,8 +86,9 @@ class CategoriesPage extends StatelessWidget {
               imageUrl: cat['image'],
               backgroundColor: cat['color'],
               onTap: () {
-                // Future implementation: Filter products by this category
-                // For now just pop or handle navigation
+                // Update category and jump to Home tab
+                context.read<CategoryProvider>().setCategory(cat['title']);
+                context.read<NavigationProvider>().setIndex(0);
               },
             );
           },

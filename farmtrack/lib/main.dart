@@ -9,6 +9,8 @@ import 'services/order_service.dart';
 import 'services/address_service.dart';
 import 'services/payment_service.dart';
 import 'providers/theme_provider.dart';
+import 'providers/category_provider.dart';
+import 'providers/navigation_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +32,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => AddressService()),
         ChangeNotifierProvider(create: (context) => PaymentService()),
+        ChangeNotifierProvider(create: (context) => CategoryProvider()),
+        ChangeNotifierProvider(create: (context) => NavigationProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {

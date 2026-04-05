@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import '../utils/constants.dart';
-import '../widgets/bottom_nav_bar.dart';
+import 'package:provider/provider.dart';
+import '../providers/navigation_provider.dart';
 import 'home_page.dart';
 import 'categories_page.dart';
 import 'cart_page.dart';
 import 'profile_page.dart';
+import '../widgets/bottom_nav_bar.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -14,8 +15,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 0;
-
   final List<Widget> _pages = [
     const HomePage(),
     const CategoriesPage(),
@@ -23,23 +22,21 @@ class _MainScreenState extends State<MainScreen> {
     const ProfilePage(),
   ];
 
-  void _onBottomNavTap(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final navProvider = context.watch<NavigationProvider>();
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: IndexedStack(
-        index: _currentIndex,
+        index: navProvider.currentIndex,
         children: _pages,
       ),
       bottomNavigationBar: AppBottomNavBar(
-        currentIndex: _currentIndex,
-        onTap: _onBottomNavTap,
+        currentIndex: navProvider.currentIndex,
+        onTap: (index) {
+          navProvider.setIndex(index);
+        },
       ),
     );
   }
