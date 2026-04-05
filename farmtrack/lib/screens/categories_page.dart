@@ -56,13 +56,13 @@ class CategoriesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundWhite,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text(
           'Categories',
           style: AppTextStyles.headerText,
         ),
-        backgroundColor: AppColors.backgroundWhite,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         centerTitle: true,
         elevation: 0,
         scrolledUnderElevation: 0,

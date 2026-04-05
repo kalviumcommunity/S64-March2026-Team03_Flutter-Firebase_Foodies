@@ -4,6 +4,7 @@ import '../utils/constants.dart';
 import '../services/auth_service.dart';
 import '../services/firestore_service.dart';
 import 'orders_page.dart';
+import 'settings_screen.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -11,15 +12,19 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
+    final bgColor = Theme.of(context).scaffoldBackgroundColor;
+    final textColor = Theme.of(context).colorScheme.onSurface;
+    final textSecondary = Theme.of(context).colorScheme.onSurfaceVariant;
+    final avatarBg = Theme.of(context).primaryColor.withOpacity(0.1);
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundWhite,
+      backgroundColor: bgColor,
       appBar: AppBar(
         title: const Text(
           'My Profile',
           style: AppTextStyles.headerText,
         ),
-        backgroundColor: AppColors.backgroundWhite,
+        backgroundColor: bgColor,
         centerTitle: true,
         elevation: 0,
       ),
@@ -39,26 +44,26 @@ class ProfilePage extends StatelessWidget {
 
                     return Column(
                       children: [
-                        const CircleAvatar(
+                        CircleAvatar(
                           radius: 50,
-                          backgroundColor: AppColors.categoryBgGreen,
-                          child: Icon(Icons.person,
+                          backgroundColor: avatarBg,
+                          child: const Icon(Icons.person,
                               size: 50, color: AppColors.primaryGreen),
                         ),
                         const SizedBox(height: 16),
                         Text(
                           displayName,
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary),
+                              color: textColor),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           displayPhone,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
-                            color: AppColors.textSecondary,
+                            color: textSecondary,
                           ),
                         ),
                       ],
@@ -69,22 +74,27 @@ class ProfilePage extends StatelessWidget {
               const SizedBox(height: 32),
               
               // Settings List
-              _buildProfileOption(Icons.shopping_bag_outlined, 'My Orders', onTap: () {
+              _buildProfileOption(context, Icons.shopping_bag_outlined, 'My Orders', onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const OrdersPage()),
                 );
               }),
               const Divider(height: 1),
-              _buildProfileOption(Icons.location_on_outlined, 'Delivery Addresses'),
+              _buildProfileOption(context, Icons.location_on_outlined, 'Delivery Addresses'),
               const Divider(height: 1),
-              _buildProfileOption(Icons.account_balance_wallet_outlined, 'Payment Methods'),
+              _buildProfileOption(context, Icons.account_balance_wallet_outlined, 'Payment Methods'),
               const Divider(height: 1),
-              _buildProfileOption(Icons.notifications_outlined, 'Notifications'),
+              _buildProfileOption(context, Icons.notifications_outlined, 'Notifications'),
               const Divider(height: 1),
-              _buildProfileOption(Icons.settings_outlined, 'Settings'),
+              _buildProfileOption(context, Icons.settings_outlined, 'Settings', onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                );
+              }),
               const Divider(height: 1),
-              _buildProfileOption(Icons.help_outline, 'Help & Support'),
+              _buildProfileOption(context, Icons.help_outline, 'Help & Support'),
               const SizedBox(height: 32),
               
               SizedBox(
@@ -111,15 +121,15 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileOption(IconData icon, String title, {VoidCallback? onTap}) {
+  Widget _buildProfileOption(BuildContext context, IconData icon, String title, {VoidCallback? onTap}) {
     return ListTile(
       leading: Icon(icon, color: AppColors.primaryGreen),
       title: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
-            color: AppColors.textPrimary),
+            color: Theme.of(context).colorScheme.onSurface),
       ),
       trailing:
           const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),

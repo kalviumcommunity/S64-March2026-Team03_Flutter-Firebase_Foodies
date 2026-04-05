@@ -6,21 +6,14 @@ import 'firebase_options.dart';
 import 'core/auth_wrapper.dart';
 import 'services/cart_service.dart';
 import 'services/order_service.dart';
+import 'providers/theme_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => CartService()),
-        ChangeNotifierProvider(create: (context) => OrderService()),
-      ],
-      child: const MyApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -28,19 +21,42 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'FarmTrack UI',
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF678D46),
-          primary: const Color(0xFF678D46),
-        ),
-        textTheme: GoogleFonts.poppinsTextTheme(),
-        useMaterial3: true,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CartService()),
+        ChangeNotifierProvider(create: (context) => OrderService()),
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+      ],
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            title: 'FarmTrack UI',
+            themeMode: themeProvider.themeMode,
+            theme: ThemeData(
+              scaffoldBackgroundColor: Colors.white,
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: const Color(0xFF678D46),
+                primary: const Color(0xFF678D46),
+              ),
+              textTheme: GoogleFonts.poppinsTextTheme(),
+              useMaterial3: true,
+            ),
+            darkTheme: ThemeData.dark().copyWith(
+              scaffoldBackgroundColor: const Color(0xFF121212),
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: const Color(0xFF678D46),
+                brightness: Brightness.dark,
+                primary: const Color(0xFF678D46),
+              ),
+              textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
+              cardColor: const Color(0xFF1E1E1E),
+              useMaterial3: true,
+            ),
+            home: const AuthWrapper(),
+            debugShowCheckedModeBanner: false,
+          );
+        },
       ),
-      home: const AuthWrapper(),
-      debugShowCheckedModeBanner: false,
     );
   }
 }

@@ -27,13 +27,13 @@ class OrderDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundWhite,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Order Details', style: AppTextStyles.headerText),
-        backgroundColor: AppColors.backgroundWhite,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         centerTitle: true,
         elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.textPrimary),
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurface),
       ),
       body: SafeArea(
         child: StreamBuilder<Order?>(
@@ -56,22 +56,22 @@ class OrderDetailsPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildHeaderCard(currentOrder, shortId, dateStr),
+                  _buildHeaderCard(context, currentOrder, shortId, dateStr),
                   const SizedBox(height: 24),
                   
-                  const Text('Track Order', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                  Text('Track Order', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
                   const SizedBox(height: 16),
-                  _buildTimelineCard(currentOrder),
+                  _buildTimelineCard(context, currentOrder),
                   const SizedBox(height: 24),
 
-                  const Text('Items', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                  Text('Items', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
                   const SizedBox(height: 16),
-                  _buildItemsCard(currentOrder),
+                  _buildItemsCard(context, currentOrder),
                   const SizedBox(height: 24),
 
-                  const Text('Delivery Info', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                  Text('Delivery Info', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
                   const SizedBox(height: 16),
-                  _buildDeliveryInfoCard(),
+                  _buildDeliveryInfoCard(context),
                   const SizedBox(height: 24),
                 ],
               ),
@@ -82,7 +82,7 @@ class OrderDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderCard(Order currentOrder, String shortId, String dateStr) {
+  Widget _buildHeaderCard(BuildContext context, Order currentOrder, String shortId, String dateStr) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -129,7 +129,7 @@ class OrderDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTimelineCard(Order currentOrder) {
+  Widget _buildTimelineCard(BuildContext context, Order currentOrder) {
     final stages = [
       {'title': 'Order Placed', 'icon': Icons.receipt_long},
       {'title': 'Packed', 'icon': Icons.inventory_2_outlined},
@@ -141,14 +141,15 @@ class OrderDetailsPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor.withOpacity(0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: List.generate(stages.length, (index) {
           return _buildTimelineStage(
+            context: context,
             title: stages[index]['title'] as String,
             icon: stages[index]['icon'] as IconData,
             isCompleted: index <= currentIndex,
@@ -161,6 +162,7 @@ class OrderDetailsPage extends StatelessWidget {
   }
 
   Widget _buildTimelineStage({
+    required BuildContext context,
     required String title,
     required IconData icon,
     required bool isCompleted,
@@ -176,11 +178,11 @@ class OrderDetailsPage extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: isCompleted ? AppColors.primaryGreen : Colors.white,
+                color: isCompleted ? AppColors.primaryGreen : Theme.of(context).cardColor,
                 shape: BoxShape.circle,
                 border: isCompleted 
                     ? null 
-                    : Border.all(color: Colors.grey.shade300, width: 2),
+                    : Border.all(color: Theme.of(context).dividerColor.withOpacity(0.1), width: 2),
                 boxShadow: isCurrent 
                     ? [BoxShadow(color: AppColors.primaryGreen.withOpacity(0.4), blurRadius: 8, spreadRadius: 2)] 
                     : null,
@@ -210,11 +212,11 @@ class OrderDetailsPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: isCurrent ? FontWeight.bold : FontWeight.w500,
-                  color: isCompleted ? AppColors.textPrimary : AppColors.textSecondary,
+                  color: isCompleted ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
               if (isCurrent)
-                Text(
+                const Text(
                   'In Progress',
                   style: TextStyle(fontSize: 12, color: AppColors.primaryGreen, fontWeight: FontWeight.bold),
                 )
@@ -225,13 +227,13 @@ class OrderDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildItemsCard(Order currentOrder) {
+  Widget _buildItemsCard(BuildContext context, Order currentOrder) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor.withOpacity(0.1)),
       ),
       child: Column(
         children: currentOrder.items.map((item) {
@@ -244,9 +246,9 @@ class OrderDetailsPage extends StatelessWidget {
                     width: 50,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
+                      color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey.shade200),
+                      border: Border.all(color: Theme.of(context).dividerColor.withOpacity(0.1)),
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
@@ -262,9 +264,9 @@ class OrderDetailsPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(item.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: AppColors.textPrimary)),
+                        Text(item.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Theme.of(context).colorScheme.onSurface)),
                         const SizedBox(height: 4),
-                        Text('Qty: ${item.quantity}', style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                        Text('Qty: ${item.quantity}', style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                       ],
                     ),
                   ),
@@ -279,13 +281,13 @@ class OrderDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildDeliveryInfoCard() {
+  Widget _buildDeliveryInfoCard(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor.withOpacity(0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -299,13 +301,13 @@ class OrderDetailsPage extends StatelessWidget {
                 child: const Icon(Icons.local_shipping, color: AppColors.primaryGreen, size: 20),
               ),
               const SizedBox(width: 16),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Estimated Delivery', style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
-                    SizedBox(height: 4),
-                    Text('Today, 4:00 PM - 5:00 PM', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                    Text('Estimated Delivery', style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                    const SizedBox(height: 4),
+                    Text('Today, 4:00 PM - 5:00 PM', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
                   ],
                 ),
               )
@@ -323,15 +325,15 @@ class OrderDetailsPage extends StatelessWidget {
                 child: const Icon(Icons.eco, color: AppColors.primaryGreen, size: 20),
               ),
               const SizedBox(width: 16),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Farm Transparency', style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
-                    SizedBox(height: 4),
+                    Text('Farm Transparency', style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                    const SizedBox(height: 4),
                     Text('Sourced from local farms 🌱', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.primaryGreen)),
-                    SizedBox(height: 2),
-                    Text('Freshly harvested this morning to ensure origin quality.', style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                    const SizedBox(height: 2),
+                    Text('Freshly harvested this morning to ensure origin quality.', style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                   ],
                 ),
               )

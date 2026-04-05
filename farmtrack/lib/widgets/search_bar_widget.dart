@@ -10,7 +10,7 @@ class SearchBarWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.defaultPadding, vertical: 8.0),
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.backgroundWhite,
+          color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: BorderRadius.circular(AppConstants.borderRadius),
           border: Border.all(color: AppColors.primaryGreen.withOpacity(0.5), width: 1.5),
           boxShadow: [
@@ -24,13 +24,13 @@ class SearchBarWidget extends StatelessWidget {
         child: TextField(
           decoration: InputDecoration(
             hintText: 'What are you looking for? Search here...',
-            hintStyle: const TextStyle(
-              color: AppColors.textSecondary,
+            hintStyle: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
               fontSize: 14,
             ),
-            prefixIcon: const Icon(
+            prefixIcon: Icon(
               Icons.search,
-              color: AppColors.textPrimary,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
             border: InputBorder.none,
             contentPadding: const EdgeInsets.symmetric(vertical: 14.0),

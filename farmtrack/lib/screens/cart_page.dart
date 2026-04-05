@@ -19,13 +19,13 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundWhite,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text(
           'Your Cart',
           style: AppTextStyles.headerText,
         ),
-        backgroundColor: AppColors.backgroundWhite,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         centerTitle: true,
         elevation: 0,
       ),
@@ -33,21 +33,21 @@ class _CartPageState extends State<CartPage> {
         child: Consumer<CartService>(
           builder: (context, cartService, child) {
             if (cartService.items.isEmpty) {
-              return const Center(
+              return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       Icons.shopping_cart_outlined,
                       size: 80,
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Text(
                       'Your cart is empty',
                       style: TextStyle(
                         fontSize: 18,
-                        color: AppColors.textSecondary,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -68,9 +68,9 @@ class _CartPageState extends State<CartPage> {
                       width: 80,
                       height: 80,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.grey.shade200),
+                        border: Border.all(color: Theme.of(context).dividerColor.withOpacity(0.1)),
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
@@ -93,16 +93,16 @@ class _CartPageState extends State<CartPage> {
                         children: [
                           Text(
                             item.name,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.textPrimary),
+                                color: Theme.of(context).colorScheme.onSurface),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             item.quantityStr,
-                            style: const TextStyle(
-                                fontSize: 14, color: AppColors.textSecondary),
+                            style: TextStyle(
+                                fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant),
                           ),
                           const SizedBox(height: 8),
                           Text(
@@ -153,7 +153,7 @@ class _CartPageState extends State<CartPage> {
           return Container(
             padding: const EdgeInsets.all(AppConstants.defaultPadding),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).cardColor,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.05),
@@ -170,9 +170,9 @@ class _CartPageState extends State<CartPage> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Total',
+                      Text('Total',
                           style: TextStyle(
-                              fontSize: 16, color: AppColors.textSecondary)),
+                              fontSize: 16, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                       Text('₹ ${cartService.getTotalPrice().toStringAsFixed(2)}',
                           style: const TextStyle(
                               fontSize: 22,
@@ -290,7 +290,7 @@ class _CartPageState extends State<CartPage> {
                             child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                           )
                         : const Text('Checkout',
-                            style: TextStyle(fontSize: 16, color: AppColors.textLight)),
+                            style: TextStyle(fontSize: 16, color: Colors.white)),
                   )
                 ],
               ),

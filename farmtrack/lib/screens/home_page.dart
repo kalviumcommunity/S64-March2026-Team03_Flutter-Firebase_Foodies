@@ -92,7 +92,7 @@ class HomePage extends StatelessWidget {
                     'Categories',
                     style: AppTextStyles.sectionTitle,
                   ),
-                  Icon(Icons.more_horiz, color: AppColors.textSecondary),
+                  Icon(Icons.more_horiz, color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ],
               ),
             ),
@@ -124,10 +124,10 @@ class HomePage extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {},
-                    child: const Text(
+                    child: Text(
                       'See all',
                       style: TextStyle(
-                        color: AppColors.textSecondary,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
