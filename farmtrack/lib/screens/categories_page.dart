@@ -83,6 +83,10 @@ class CategoriesPage extends StatelessWidget {
               title: cat['title'],
               imageUrl: cat['image'],
               backgroundColor: cat['color'],
+              onTap: () {
+                // Future implementation: Filter products by this category
+                // For now just pop or handle navigation
+              },
             );
           },
         ),

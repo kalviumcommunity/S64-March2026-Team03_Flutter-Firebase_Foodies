@@ -7,12 +7,27 @@ import '../widgets/category_card.dart';
 import '../widgets/product_card.dart';
 import 'package:provider/provider.dart';
 import '../services/cart_service.dart';
+import '../services/product_service.dart';
+import '../models/product_model.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  // Reliable stable images from wikimedia commons to ensure they load
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final ProductService _productService = ProductService();
+  String _selectedCategory = 'All';
+  String _searchQuery = '';
+
   final List<Map<String, dynamic>> _categories = const [
+    {
+      'title': 'All',
+      'image': 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200',
+      'color': AppColors.categoryBgGreen
+    },
     {
       'title': 'Bakery',
       'image': 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200',
@@ -45,43 +60,28 @@ class HomePage extends StatelessWidget {
     },
   ];
 
-  final List<Map<String, dynamic>> _products = const [
-    {
-      'name': 'Almarai Orange Juice 100% Pure',
-      'quantity': '1L',
-      'price': 300.00,
-      'image': 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=300',
-    },
-    {
-      'name': 'Almarai Treats Strawberry Flavour Milk',
-      'quantity': '200ML',
-      'price': 75.00,
-      'image': 'https://images.unsplash.com/photo-1563636619-e9143ef3082a?w=300',
-    },
-    {
-      'name': 'Organic Brown Bread Slice',
-      'quantity': '400g',
-      'price': 60.00,
-      'image': 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300',
-    },
-    {
-      'name': 'Fresh Organic Bananas',
-      'quantity': '1 Dozen',
-      'price': 80.00,
-      'image': 'https://images.unsplash.com/photo-1603833665858-e61d17a86224?w=300',
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    // Seed initial products for demonstration purposes
+    _productService.seedInitialProducts();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Removed Scaffold and BottomNavigationBar from here since MainScreen handles it.
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const AppHeader(),
-            const SearchBarWidget(),
+            SearchBarWidget(
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value.toLowerCase();
+                });
+              },
+            ),
             const PromoBanner(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppConstants.defaultPadding, vertical: 8.0),
@@ -104,10 +104,17 @@ class HomePage extends StatelessWidget {
                 itemCount: _categories.length,
                 itemBuilder: (context, index) {
                   final cat = _categories[index];
+                  final isSelected = _selectedCategory == cat['title'];
                   return CategoryCard(
                     title: cat['title'],
                     imageUrl: cat['image'],
                     backgroundColor: cat['color'],
+                    isSelected: isSelected,
+                    onTap: () {
+                      setState(() {
+                        _selectedCategory = cat['title'];
+                      });
+                    },
                   );
                 },
               ),
@@ -118,8 +125,8 @@ class HomePage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Featured This Week 🔥',
+                  Text(
+                    _selectedCategory == 'All' ? 'Featured This Week 🔥' : '$_selectedCategory Items',
                     style: AppTextStyles.sectionTitle,
                   ),
                   TextButton(
@@ -135,43 +142,91 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppConstants.defaultPadding),
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _products.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.85,
-                  crossAxisSpacing: 16.0,
-                  mainAxisSpacing: 16.0,
-                ),
-                itemBuilder: (context, index) {
-                  final prod = _products[index];
-                  return ProductCard(
-                    name: prod['name'],
-                    quantity: prod['quantity'],
-                    price: prod['price'],
-                    imageUrl: prod['image'],
-                    onAdd: () {
-                      context.read<CartService>().addToCart(
-                        name: prod['name'],
-                        quantityStr: prod['quantity'],
-                        price: prod['price'],
-                        imageUrl: prod['image'],
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('${prod['name']} added to cart!'),
-                          duration: const Duration(seconds: 1),
-                          backgroundColor: AppColors.primaryGreen,
-                        ),
+            StreamBuilder<List<Product>>(
+              stream: _productService.getProducts(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(32.0),
+                      child: CircularProgressIndicator(color: AppColors.primaryGreen),
+                    ),
+                  );
+                }
+
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
+
+                List<Product> products = snapshot.data ?? [];
+
+                // Filter by category
+                if (_selectedCategory != 'All') {
+                  products = products.where((p) => p.category == _selectedCategory).toList();
+                }
+
+                // Filter by search query
+                if (_searchQuery.isNotEmpty) {
+                  products = products.where((p) => p.name.toLowerCase().contains(_searchQuery)).toList();
+                }
+
+                if (products.isEmpty) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(32.0),
+                      child: Column(
+                        children: [
+                          Icon(Icons.search_off, size: 60, color: Colors.grey[400]),
+                          const SizedBox(height: 16),
+                          Text(
+                            'No products found',
+                            style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: AppConstants.defaultPadding),
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: products.length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.85,
+                      crossAxisSpacing: 16.0,
+                      mainAxisSpacing: 16.0,
+                    ),
+                    itemBuilder: (context, index) {
+                      final prod = products[index];
+                      return ProductCard(
+                        name: prod.name,
+                        quantity: prod.quantity,
+                        price: prod.price,
+                        imageUrl: prod.image,
+                        onAdd: () {
+                          context.read<CartService>().addToCart(
+                            name: prod.name,
+                            quantityStr: prod.quantity,
+                            price: prod.price,
+                            imageUrl: prod.image,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('${prod.name} added to cart!'),
+                              duration: const Duration(seconds: 1),
+                              backgroundColor: AppColors.primaryGreen,
+                            ),
+                          );
+                        },
                       );
                     },
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 32),
           ],

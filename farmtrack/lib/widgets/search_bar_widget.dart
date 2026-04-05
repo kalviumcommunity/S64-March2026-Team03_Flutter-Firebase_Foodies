@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import '../utils/constants.dart';
 
 class SearchBarWidget extends StatelessWidget {
-  const SearchBarWidget({Key? key}) : super(key: key);
+  final Function(String)? onChanged;
+  final String? hintText;
+
+  const SearchBarWidget({
+    Key? key, 
+    this.onChanged,
+    this.hintText,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +29,9 @@ class SearchBarWidget extends StatelessWidget {
           ],
         ),
         child: TextField(
+          onChanged: onChanged,
           decoration: InputDecoration(
-            hintText: 'What are you looking for? Search here...',
+            hintText: hintText ?? 'What are you looking for? Search here...',
             hintStyle: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
               fontSize: 14,
