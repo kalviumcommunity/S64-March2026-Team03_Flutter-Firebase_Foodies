@@ -45,7 +45,11 @@ class _AdminOrderDetailScreenState extends State<AdminOrderDetailScreen> {
   Future<void> _updateStatus() async {
     setState(() => _isUpdating = true);
     try {
-      await _firestoreService.updateOrderStatus(widget.order['id'], _currentStatus);
+      await _firestoreService.updateOrderStatus(
+        widget.order['id'], 
+        _currentStatus, 
+        userId: widget.order['userId']
+      );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

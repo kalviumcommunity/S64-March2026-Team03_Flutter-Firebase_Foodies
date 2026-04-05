@@ -49,15 +49,77 @@ class FirestoreService {
   }
 
   /// Updates the status field of a specific order.
-  Future<void> updateOrderStatus(String id, String status) async {
+  Future<void> updateOrderStatus(String id, String status, {String? userId}) async {
     try {
       await _db.collection(_ordersCollection).doc(id).update({
         'status': status,
         'updatedAt': FieldValue.serverTimestamp(),
       });
+
+      // If userId is provided, send a notification
+      if (userId != null) {
+        String displayStatus = status.replaceAll('_', ' ').toUpperCase();
+        await addNotification(
+          userId: userId,
+          title: "Order Update",
+          message: "Order #$id status changed to $displayStatus",
+          type: "order",
+        );
+      }
     } catch (e) {
       print('Error in updateOrderStatus: $e');
       throw Exception('Failed to update order status.');
+    }
+  }
+
+  // --- NOTIFICATION METHODS --- //
+  
+  final String _notificationsCollection = 'notifications';
+
+  /// Adds a new notification to Firestore.
+  Future<void> addNotification({
+    required String userId,
+    required String title,
+    required String message,
+    required String type,
+  }) async {
+    try {
+      await _db.collection(_notificationsCollection).add({
+        'userId': userId,
+        'title': title,
+        'message': message,
+        'type': type,
+        'createdAt': FieldValue.serverTimestamp(),
+        'read': false,
+      });
+    } catch (e) {
+      print('Error in addNotification: $e');
+    }
+  }
+
+  /// Gets a real-time stream of notifications for a specific user.
+  Stream<QuerySnapshot<Map<String, dynamic>>> getNotifications(String userId) {
+    try {
+      return _db
+          .collection(_notificationsCollection)
+          .where('userId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
+          .snapshots();
+    } catch (e) {
+      print('Error in getNotifications: $e');
+      throw Exception('Failed to fetch notifications stream.');
+    }
+  }
+
+  /// Marks a specific notification as read.
+  Future<void> markNotificationAsRead(String notificationId) async {
+    try {
+      await _db.collection(_notificationsCollection).doc(notificationId).update({
+        'read': true,
+      });
+    } catch (e) {
+      print('Error in markNotificationAsRead: $e');
+      throw Exception('Failed to mark notification as read.');
     }
   }
 
