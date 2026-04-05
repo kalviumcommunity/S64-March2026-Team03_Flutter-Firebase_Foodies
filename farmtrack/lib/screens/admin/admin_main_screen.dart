@@ -4,6 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../services/auth_service.dart';
 import '../../services/firestore_service.dart';
 import 'admin_home_screen.dart';
+import 'admin_analytics_screen.dart';
+import 'admin_customers_screen.dart';
+import 'admin_placeholder_screen.dart';
 
 class AdminMainScreen extends StatelessWidget {
   const AdminMainScreen({super.key});
@@ -119,7 +122,6 @@ class AdminMainScreen extends StatelessWidget {
                               ],
                             ),
                             const SizedBox(height: 32),
-                            // The Card partially overlapping the bottom
                             StreamBuilder<QuerySnapshot>(
                               stream: firestoreService.getUsers(),
                               builder: (context, userSnapshot) {
@@ -282,10 +284,28 @@ class AdminMainScreen extends StatelessWidget {
           onTap: () {
             if (title == 'Orders') {
               Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminHomeScreen()));
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('$title dashboard coming soon!'), behavior: SnackBarBehavior.floating),
-              );
+            } else if (title == 'Analytics') {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminAnalyticsScreen()));
+            } else if (title == 'Customers') {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminCustomersScreen()));
+            } else if (title == 'Inventory') {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminPlaceholderScreen(
+                title: 'Warehouse Control',
+                message: 'Inventory & Stock management coming soon',
+                icon: Icons.warehouse_rounded,
+              )));
+            } else if (title == 'Live Stats') {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminPlaceholderScreen(
+                title: 'Live Telemetry',
+                message: 'Real-time store traffic & heatmaps coming soon',
+                icon: Icons.sensors_rounded,
+              )));
+            } else if (title == 'Support') {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminPlaceholderScreen(
+                title: 'Admin Support',
+                message: 'Intercom & Chat Support system coming soon',
+                icon: Icons.help_center_rounded,
+              )));
             }
           },
           borderRadius: BorderRadius.circular(24),
@@ -302,9 +322,13 @@ class AdminMainScreen extends StatelessWidget {
                 child: Icon(icon, color: accentColor, size: 28),
               ),
               const SizedBox(height: 12),
-              Text(
-                title,
-                style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 13, color: const Color(0xFF2C3E50)),
+              Flexible(
+                child: Text(
+                  title,
+                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 13, color: const Color(0xFF2C3E50)),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
