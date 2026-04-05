@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../screens/auth/login_screen.dart';
+import 'role_wrapper.dart';
 import '../screens/main_screen.dart';
 
 class AuthWrapper extends StatelessWidget {
@@ -28,8 +29,8 @@ class AuthWrapper extends StatelessWidget {
             ),
           );
         } else if (snapshot.hasData) {
-          // User is authenticated, navigate to the MainScreen (which contains Home)
-          return const MainScreen();
+          // Check for role-based navigation using RoleWrapper
+          return RoleWrapper(user: snapshot.data!);
         } else {
           // User is not authenticated, navigate to the LoginScreen
           return const LoginScreen();

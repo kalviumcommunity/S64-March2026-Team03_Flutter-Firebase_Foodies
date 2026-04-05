@@ -25,6 +25,7 @@ class AuthService {
           'name': name,
           'email': email.trim(),
           'phone': phone?.trim(),
+          'role': 'user', // Default role set during signup
         });
       }
       

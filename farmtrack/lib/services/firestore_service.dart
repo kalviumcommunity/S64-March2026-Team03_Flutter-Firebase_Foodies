@@ -71,6 +71,10 @@ class FirestoreService {
       if (!userData.containsKey('createdAt')) {
         userData['createdAt'] = FieldValue.serverTimestamp();
       }
+      // Ensure default role is "user" if not specified
+      if (!userData.containsKey('role')) {
+        userData['role'] = 'user';
+      }
       await _db.collection(_usersCollection).doc(uid).set(
         userData, 
         SetOptions(merge: true)
@@ -93,6 +97,30 @@ class FirestoreService {
       print('Error in getUser: $e');
       return null;
     }
+  }
+
+  /// Gets a user's role by UID
+  Future<String> getUserRole(String uid) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> doc = await _db.collection(_usersCollection).doc(uid).get();
+      if (doc.exists && doc.data() != null) {
+        return doc.data()!['role'] ?? 'user';
+      }
+      return 'user';
+    } catch (e) {
+      print('Error in getUserRole: $e');
+      return 'user';
+    }
+  }
+
+  /// Gets a user's role by UID as a stream for real-time updates
+  Stream<String> getUserRoleStream(String uid) {
+    return _db.collection(_usersCollection).doc(uid).snapshots().map((doc) {
+      if (doc.exists && doc.data() != null) {
+        return doc.data()!['role'] ?? 'user';
+      }
+      return 'user';
+    });
   }
 
   /// Gets a user profile by phone number
