@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../services/cart_service.dart';
 import '../services/product_service.dart';
 import '../models/product_model.dart';
+import '../providers/category_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,7 +20,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final ProductService _productService = ProductService();
-  String _selectedCategory = 'All';
   String _searchQuery = '';
 
   final List<Map<String, dynamic>> _categories = const [
@@ -63,12 +63,14 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // Seed initial products for demonstration purposes
     _productService.seedInitialProducts();
   }
 
   @override
   Widget build(BuildContext context) {
+    final catProvider = context.watch<CategoryProvider>();
+    final selectedCategory = catProvider.selectedCategory;
+
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
@@ -104,16 +106,14 @@ class _HomePageState extends State<HomePage> {
                 itemCount: _categories.length,
                 itemBuilder: (context, index) {
                   final cat = _categories[index];
-                  final isSelected = _selectedCategory == cat['title'];
+                  final isSelected = selectedCategory == cat['title'];
                   return CategoryCard(
                     title: cat['title'],
                     imageUrl: cat['image'],
                     backgroundColor: cat['color'],
                     isSelected: isSelected,
                     onTap: () {
-                      setState(() {
-                        _selectedCategory = cat['title'];
-                      });
+                      catProvider.setCategory(cat['title']);
                     },
                   );
                 },
@@ -126,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    _selectedCategory == 'All' ? 'Featured This Week 🔥' : '$_selectedCategory Items',
+                    selectedCategory == 'All' ? 'Featured This Week 🔥' : '$selectedCategory Items',
                     style: AppTextStyles.sectionTitle,
                   ),
                   TextButton(
@@ -161,8 +161,8 @@ class _HomePageState extends State<HomePage> {
                 List<Product> products = snapshot.data ?? [];
 
                 // Filter by category
-                if (_selectedCategory != 'All') {
-                  products = products.where((p) => p.category == _selectedCategory).toList();
+                if (selectedCategory != 'All') {
+                  products = products.where((p) => p.category == selectedCategory).toList();
                 }
 
                 // Filter by search query
