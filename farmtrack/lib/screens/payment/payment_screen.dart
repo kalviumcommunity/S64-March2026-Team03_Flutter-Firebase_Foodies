@@ -6,6 +6,7 @@ import '../../services/payment_service.dart';
 import '../../services/cart_service.dart';
 import '../../services/firestore_service.dart';
 import '../../utils/constants.dart';
+import './order_confirmation_screen.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({Key? key}) : super(key: key);
@@ -132,7 +133,7 @@ class _PaymentScreenState extends State<PaymentScreen>
       };
 
       final firestoreService = FirestoreService();
-      await firestoreService.addOrder(orderData).timeout(
+      final orderId = await firestoreService.addOrder(orderData).timeout(
             const Duration(seconds: 10),
             onTimeout: () => throw Exception(
                 'Connection timed out. Check your internet connection.'),
@@ -144,21 +145,24 @@ class _PaymentScreenState extends State<PaymentScreen>
       if (mounted) {
         setState(() => _isProcessing = false);
 
-        // Show success dialog
-        await showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (ctx) => _OrderSuccessDialog(onDone: () {
-            Navigator.of(ctx).pop();
-          }),
+        // Capture necessary data before clearing state
+        final selectedMethodLabel = paymentService.selectedMethod!.label;
+        final totalPrice = cartService.getTotalPrice();
+
+        // Replace checkout flow with confirmation screen
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => OrderConfirmationScreen(
+              orderId: orderId,
+              totalPrice: totalPrice,
+              paymentMethod: selectedMethodLabel,
+            ),
+          ),
+          (route) => false,
         );
 
-        // Pop back to cart FIRST
-        if (mounted) {
-          Navigator.of(context).pop();
-          // clearSelection after pop so this screen's Consumer is gone
-          paymentService.clearSelection();
-        }
+        // clearSelection safely after the navigation capture
+        paymentService.clearSelection();
       }
     } catch (e) {
       if (mounted) {
@@ -501,75 +505,4 @@ class _PaymentScreenState extends State<PaymentScreen>
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// Success dialog shown after order is placed
-// ═══════════════════════════════════════════════════════════════════════════
-class _OrderSuccessDialog extends StatelessWidget {
-  final VoidCallback onDone;
-  const _OrderSuccessDialog({required this.onDone});
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      backgroundColor: theme.cardColor,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 72,
-              height: 72,
-              decoration: BoxDecoration(
-                color: AppColors.primaryGreen.withOpacity(0.12),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.check_circle,
-                  color: AppColors.primaryGreen, size: 44),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Order Placed!',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-                color: theme.colorScheme.onSurface,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Your order has been placed successfully.\nYou can track it in the Orders tab.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: theme.colorScheme.onSurfaceVariant,
-                height: 1.5,
-              ),
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: ElevatedButton(
-                onPressed: onDone,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryGreen,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  elevation: 0,
-                ),
-                child: const Text('Done',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white)),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
