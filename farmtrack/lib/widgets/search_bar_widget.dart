@@ -14,16 +14,15 @@ class SearchBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppConstants.defaultPadding, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: AppConstants.defaultPadding, vertical: 12.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          borderRadius: BorderRadius.circular(AppConstants.borderRadius),
-          border: Border.all(color: AppColors.primaryGreen.withOpacity(0.5), width: 1.5),
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(16.0),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 15,
               offset: const Offset(0, 4),
             ),
           ],
@@ -31,17 +30,23 @@ class SearchBarWidget extends StatelessWidget {
         child: TextField(
           onChanged: onChanged,
           decoration: InputDecoration(
-            hintText: hintText ?? 'What are you looking for? Search here...',
+            hintText: hintText ?? 'Search farm fresh items...',
             hintStyle: TextStyle(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-              fontSize: 14,
+              color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
+              fontSize: 15,
             ),
             prefixIcon: Icon(
-              Icons.search,
-              color: Theme.of(context).colorScheme.onSurface,
+              Icons.search_rounded,
+              color: AppColors.primaryGreen.withOpacity(0.7),
+              size: 24,
+            ),
+            suffixIcon: Icon(
+              Icons.tune_rounded, // Filter icon mock
+              color: AppColors.primaryGreen.withOpacity(0.7),
+              size: 20,
             ),
             border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(vertical: 14.0),
+            contentPadding: const EdgeInsets.symmetric(vertical: 16.0),
           ),
         ),
       ),

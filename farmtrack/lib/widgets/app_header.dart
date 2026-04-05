@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../utils/constants.dart';
 
 class AppHeader extends StatelessWidget {
@@ -7,38 +8,80 @@ class AppHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppConstants.defaultPadding, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: AppConstants.defaultPadding, vertical: 24.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Placeholder for the App Logo
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  // Stylized Leaf Icon
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryGreen.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.eco_rounded,
+                      color: AppColors.primaryGreen,
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  // Typographic Logo
+                  RichText(
+                    text: TextSpan(
+                      style: GoogleFonts.poppins(
+                        fontSize: 22,
+                        letterSpacing: -1,
+                      ),
+                      children: const [
+                        TextSpan(
+                          text: 'Farm',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF2E4D1A), // Deep Forest Green
+                          ),
+                        ),
+                        TextSpan(
+                          text: 'Fresh',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primaryGreen, // Lighter Brand Green
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          // User Avatar Placeholder with subtle shadow
           Container(
-            width: 50,
-            height: 50,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: AppColors.primaryGreen, width: 2),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
-            child: const Center(
-              child: Text(
-                'FF',
-                style: TextStyle(
-                  color: AppColors.primaryGreen,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
+            child: const CircleAvatar(
+              radius: 24,
+              backgroundColor: Colors.white,
+              child: Padding(
+                padding: EdgeInsets.all(2),
+                child: CircleAvatar(
+                  radius: 22,
+                  backgroundImage: NetworkImage('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100'),
                 ),
               ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          // App Title
-          const Text(
-            'Farm Fresh',
-            style: TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primaryGreen,
-              letterSpacing: 0.5,
             ),
           ),
         ],

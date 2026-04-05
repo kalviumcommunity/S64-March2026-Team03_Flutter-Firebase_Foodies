@@ -10,6 +10,7 @@ import '../services/cart_service.dart';
 import '../services/product_service.dart';
 import '../models/product_model.dart';
 import '../providers/category_provider.dart';
+import '../providers/navigation_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -84,22 +85,36 @@ class _HomePageState extends State<HomePage> {
                 });
               },
             ),
+            const SizedBox(height: 8),
             const PromoBanner(),
+            const SizedBox(height: 24),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppConstants.defaultPadding, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: AppConstants.defaultPadding),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Categories',
-                    style: AppTextStyles.sectionTitle,
+                  Expanded(
+                    child: Text(
+                      'Browse Categories',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
                   ),
-                  Icon(Icons.more_horiz, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  TextButton(
+                    onPressed: () {
+                      context.read<NavigationProvider>().setIndex(1);
+                    },
+                    child: const Text('See All', style: TextStyle(color: AppColors.primaryGreen, fontWeight: FontWeight.bold)),
+                  ),
                 ],
               ),
             ),
+            const SizedBox(height: 12),
             SizedBox(
-              height: 140,
+              height: 110,
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: AppConstants.defaultPadding),
                 scrollDirection: Axis.horizontal,
@@ -119,29 +134,25 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppConstants.defaultPadding),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    selectedCategory == 'All' ? 'Featured This Week 🔥' : '$selectedCategory Items',
-                    style: AppTextStyles.sectionTitle,
-                  ),
-                  TextButton(
-                    onPressed: () {},
+                  Expanded(
                     child: Text(
-                      'See all',
+                      selectedCategory == 'All' ? 'Special For You ✨' : '$selectedCategory Corner',
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
+            const SizedBox(height: 16),
             StreamBuilder<List<Product>>(
               stream: _productService.getProducts(),
               builder: (context, snapshot) {
@@ -176,11 +187,11 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.all(32.0),
                       child: Column(
                         children: [
-                          Icon(Icons.search_off, size: 60, color: Colors.grey[400]),
+                          Icon(Icons.search_off_rounded, size: 60, color: Colors.grey[300]),
                           const SizedBox(height: 16),
                           Text(
-                            'No products found',
-                            style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                            'No items match your search',
+                            style: TextStyle(color: Colors.grey[500], fontSize: 16, fontWeight: FontWeight.w500),
                           ),
                         ],
                       ),
@@ -196,7 +207,7 @@ class _HomePageState extends State<HomePage> {
                     itemCount: products.length,
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio: 0.85,
+                      childAspectRatio: 0.75,
                       crossAxisSpacing: 16.0,
                       mainAxisSpacing: 16.0,
                     ),
@@ -219,6 +230,8 @@ class _HomePageState extends State<HomePage> {
                               content: Text('${prod.name} added to cart!'),
                               duration: const Duration(seconds: 1),
                               backgroundColor: AppColors.primaryGreen,
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                             ),
                           );
                         },
