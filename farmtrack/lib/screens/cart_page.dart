@@ -1,20 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../utils/constants.dart';
 import '../services/cart_service.dart';
-import '../services/order_service.dart';
-import '../services/firestore_service.dart';
+import 'payment/payment_screen.dart';
 
-class CartPage extends StatefulWidget {
+class CartPage extends StatelessWidget {
   const CartPage({Key? key}) : super(key: key);
-
-  @override
-  State<CartPage> createState() => _CartPageState();
-}
-
-class _CartPageState extends State<CartPage> {
-  bool _isProcessing = false;
 
   @override
   Widget build(BuildContext context) {
@@ -180,118 +171,26 @@ class _CartPageState extends State<CartPage> {
                               color: AppColors.primaryGreen)),
                     ],
                   ),
-                  ElevatedButton(
-                    onPressed: _isProcessing ? null : () async {
-                      setState(() {
-                        _isProcessing = true;
-                      });
-
-                      try {
-                        final auth = FirebaseAuth.instance;
-                        final user = auth.currentUser;
-                        
-                        if (user == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please log in to checkout'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                          setState(() {
-                            _isProcessing = false;
-                          });
-                          return;
-                        }
-
-                        final items = cartService.items.map((item) => {
-                          'name': item.name,
-                          'price': item.price,
-                          'quantityStr': item.quantityStr,
-                          'quantity': item.quantity,
-                          'imageUrl': item.imageUrl,
-                        }).toList();
-
-                        final orderData = {
-                          'userId': user.uid,
-                          'items': items,
-                          'totalPrice': cartService.getTotalPrice(),
-                          'status': 'placed',
-                        };
-
-                        final firestoreService = FirestoreService();
-                        
-                        try {
-                          await firestoreService.addOrder(orderData).timeout(
-                            const Duration(seconds: 10),
-                            onTimeout: () {
-                              throw Exception('Connection timed out. Check your internet or Firebase setup.');
-                            },
-                          );
-
-                          cartService.clearCart();
-                          
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Order placed successfully!'),
-                                backgroundColor: AppColors.primaryGreen,
-                              ),
-                            );
-                          }
-                        } catch (e) {
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Backend Error: $e'),
-                                backgroundColor: Colors.red,
-                                duration: const Duration(seconds: 5),
-                              ),
-                            );
-                          }
-                        } finally {
-                          if (mounted) {
-                            setState(() {
-                              _isProcessing = false;
-                            });
-                          }
-                        }
-                      } catch (e) {
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Failed to validate order: $e'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        }
-                      } finally {
-                        if (mounted) {
-                           // Ensure processing state is reset if unexpected synchronous throw occurs
-                           if (_isProcessing) {
-                            setState(() {
-                              _isProcessing = false;
-                            });
-                           }
-                        }
-                      }
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const PaymentScreen(),
+                        ),
+                      );
                     },
+                    icon: const Icon(Icons.payment, color: Colors.white, size: 20),
+                    label: const Text('Checkout',
+                        style: TextStyle(fontSize: 16, color: Colors.white)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryGreen,
-                      disabledBackgroundColor: Colors.grey,
                       padding:
-                          const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                          const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
+                      elevation: 0,
                     ),
-                    child: _isProcessing
-                        ? const SizedBox(
-                            width: 20, 
-                            height: 20, 
-                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                          )
-                        : const Text('Checkout',
-                            style: TextStyle(fontSize: 16, color: Colors.white)),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -301,3 +200,4 @@ class _CartPageState extends State<CartPage> {
     );
   }
 }
+

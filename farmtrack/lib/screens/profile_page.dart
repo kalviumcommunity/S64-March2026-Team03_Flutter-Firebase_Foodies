@@ -6,6 +6,7 @@ import '../services/firestore_service.dart';
 import 'orders_page.dart';
 import 'settings_screen.dart';
 import 'address/address_screen.dart';
+import 'payment/saved_payments_screen.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -89,7 +90,12 @@ class ProfilePage extends StatelessWidget {
                 );
               }),
               const Divider(height: 1),
-              _buildProfileOption(context, Icons.account_balance_wallet_outlined, 'Payment Methods'),
+              _buildProfileOption(context, Icons.account_balance_wallet_outlined, 'Payment Methods', onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SavedPaymentsScreen()),
+                );
+              }),
               const Divider(height: 1),
               _buildProfileOption(context, Icons.notifications_outlined, 'Notifications'),
               const Divider(height: 1),

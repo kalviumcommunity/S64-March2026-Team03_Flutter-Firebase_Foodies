@@ -116,6 +116,7 @@ class FirestoreService {
   // --- ADDRESS METHODS --- //
   
   final String _addressesSubCollection = 'addresses';
+  final String _paymentsSubCollection = 'payment_methods';
 
   /// Adds a address to a user's collection in Firestore.
   Future<String> addAddress(String uid, Map<String, dynamic> addressData) async {
@@ -173,6 +174,53 @@ class FirestoreService {
     } catch (e) {
       print('Error in updateAddress: $e');
       throw Exception('Failed to update address.');
+    }
+  }
+
+  // --- PAYMENT METHOD METHODS --- //
+
+  /// Adds a payment method (Card/UPI) to user's Firestore sub-collection.
+  Future<String> addPaymentMethod(String uid, Map<String, dynamic> paymentData) async {
+    try {
+      DocumentReference docRef = await _db
+          .collection(_usersCollection)
+          .doc(uid)
+          .collection(_paymentsSubCollection)
+          .add(paymentData);
+      return docRef.id;
+    } catch (e) {
+      print('Error in addPaymentMethod: $e');
+      throw Exception('Failed to save payment method.');
+    }
+  }
+
+  /// Gets real-time stream of user's saved payment methods.
+  Stream<QuerySnapshot<Map<String, dynamic>>> getPaymentMethods(String uid) {
+    try {
+      return _db
+          .collection(_usersCollection)
+          .doc(uid)
+          .collection(_paymentsSubCollection)
+          .orderBy('createdAt', descending: true)
+          .snapshots();
+    } catch (e) {
+      print('Error in getPaymentMethods: $e');
+      throw Exception('Failed to fetch payment methods.');
+    }
+  }
+
+  /// Deletes a saved payment method.
+  Future<void> deletePaymentMethod(String uid, String paymentId) async {
+    try {
+      await _db
+          .collection(_usersCollection)
+          .doc(uid)
+          .collection(_paymentsSubCollection)
+          .doc(paymentId)
+          .delete();
+    } catch (e) {
+      print('Error in deletePaymentMethod: $e');
+      throw Exception('Failed to delete payment method.');
     }
   }
 }

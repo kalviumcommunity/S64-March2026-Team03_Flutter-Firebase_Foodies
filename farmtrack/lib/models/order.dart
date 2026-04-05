@@ -7,6 +7,7 @@ class Order {
   final List<CartItem> items;
   final double totalPrice;
   final String status;
+  final String paymentMethod;
   final DateTime createdAt;
 
   Order({
@@ -15,6 +16,7 @@ class Order {
     required this.items,
     required this.totalPrice,
     this.status = "placed",
+    this.paymentMethod = 'cod',
     required this.createdAt,
   });
 
@@ -24,6 +26,7 @@ class Order {
     List<CartItem>? items,
     double? totalPrice,
     String? status,
+    String? paymentMethod,
     DateTime? createdAt,
   }) {
     return Order(
@@ -32,6 +35,7 @@ class Order {
       items: items ?? this.items,
       totalPrice: totalPrice ?? this.totalPrice,
       status: status ?? this.status,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -43,6 +47,7 @@ class Order {
       'items': items.map((x) => x.toMap()).toList(),
       'totalPrice': totalPrice,
       'status': status,
+      'paymentMethod': paymentMethod,
       'createdAt': Timestamp.fromDate(createdAt),
     };
   }
@@ -54,6 +59,7 @@ class Order {
       items: List<CartItem>.from(map['items']?.map((x) => CartItem.fromMap(x)) ?? []),
       totalPrice: map['totalPrice']?.toDouble() ?? 0.0,
       status: map['status'] ?? 'placed',
+      paymentMethod: map['paymentMethod'] ?? 'cod',
       createdAt: map['createdAt'] != null ? (map['createdAt'] as Timestamp).toDate() : DateTime.now(),
     );
   }

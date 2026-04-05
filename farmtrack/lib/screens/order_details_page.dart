@@ -124,9 +124,59 @@ class OrderDetailsPage extends StatelessWidget {
               Text('₹${currentOrder.totalPrice.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20)),
             ],
           ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 12),
+            child: Divider(color: Colors.white30, height: 1),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Payment', style: TextStyle(color: Colors.white70, fontSize: 14)),
+              Row(
+                children: [
+                  Icon(
+                    _paymentIcon(currentOrder.paymentMethod),
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    _paymentLabel(currentOrder.paymentMethod),
+                    style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 15),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
     );
+  }
+
+  String _paymentLabel(String key) {
+    switch (key) {
+      case 'cod':
+        return 'Cash on Delivery';
+      case 'card':
+        return 'Card';
+      case 'upi':
+        return 'UPI';
+      default:
+        return key.toUpperCase();
+    }
+  }
+
+  IconData _paymentIcon(String key) {
+    switch (key) {
+      case 'cod':
+        return Icons.money;
+      case 'card':
+        return Icons.credit_card;
+      case 'upi':
+        return Icons.account_balance;
+      default:
+        return Icons.payment;
+    }
   }
 
   Widget _buildTimelineCard(BuildContext context, Order currentOrder) {

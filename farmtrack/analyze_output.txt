@@ -1,0 +1,105 @@
+﻿Analyzing farmtrack...                                          
+
+   info - 'useMaterial3' is deprecated and shouldn't be used. Use a ThemeData constructor (.from, .light, or .dark) instead. These constructors all have a useMaterial3 argument, and they set appropriate default values based on its value. See the useMaterial3 API documentation for full details. This feature was deprecated after v3.13.0-0.2.pre - lib\main.dart:57:15 - deprecated_member_use
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\screens\address\add_address_screen.dart:150:41 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\screens\address\add_address_screen.dart:151:48 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\screens\address\add_address_screen.dart:160:48 - use_build_context_synchronously
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\address\add_address_screen.dart:228:53 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\address\add_address_screen.dart:231:57 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\address\add_address_screen.dart:235:57 - deprecated_member_use
+   info - Don't invoke 'print' in production code - lib\screens\auth\login_screen.dart:86:23 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\auth\login_screen.dart:96:23 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\auth\login_screen.dart:98:23 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\auth\login_screen.dart:106:58 - deprecated_member_use
+   info - Don't invoke 'print' in production code - lib\screens\auth\signup_screen.dart:122:23 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\auth\signup_screen.dart:127:23 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\auth\signup_screen.dart:139:23 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\auth\signup_screen.dart:141:23 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\auth\signup_screen.dart:149:58 - deprecated_member_use
+   info - Parameter 'key' could be a super parameter - lib\screens\cart_page.dart:8:9 - use_super_parameters
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\cart_page.dart:64:82 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\cart_page.dart:150:39 - deprecated_member_use
+   info - Parameter 'key' could be a super parameter - lib\screens\categories_page.dart:6:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\screens\home_page.dart:12:9 - use_super_parameters
+warning - Unused import: '../utils/constants.dart' - lib\screens\main_screen.dart:2:8 - unused_import
+   info - Parameter 'key' could be a super parameter - lib\screens\main_screen.dart:10:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\screens\order_details_page.dart:10:9 - use_super_parameters
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\order_details_page.dart:93:43 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\order_details_page.dart:196:66 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\order_details_page.dart:235:72 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\order_details_page.dart:237:64 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\order_details_page.dart:286:66 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\order_details_page.dart:301:80 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\order_details_page.dart:340:66 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\order_details_page.dart:350:73 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\order_details_page.dart:374:73 - deprecated_member_use
+   info - Parameter 'key' could be a super parameter - lib\screens\orders_page.dart:9:9 - use_super_parameters
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\orders_page.dart:84:84 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\orders_page.dart:87:51 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\orders_page.dart:110:65 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\orders_page.dart:141:96 - deprecated_member_use
+   info - Unnecessary use of 'toList' in a spread - lib\screens\orders_page.dart:185:30 - unnecessary_to_list_in_spreads
+   info - Parameter 'key' could be a super parameter - lib\screens\payment\payment_screen.dart:11:9 - use_super_parameters
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\payment\payment_screen.dart:257:30 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\payment\payment_screen.dart:259:40 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\payment\payment_screen.dart:266:42 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\payment\payment_screen.dart:273:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\payment\payment_screen.dart:289:36 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\payment\payment_screen.dart:291:46 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\payment\payment_screen.dart:344:34 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\payment\payment_screen.dart:380:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\payment\payment_screen.dart:441:37 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\payment\payment_screen.dart:459:46 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\payment\payment_screen.dart:515:47 - deprecated_member_use
+   info - Parameter 'key' could be a super parameter - lib\screens\profile_page.dart:11:9 - use_super_parameters
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\profile_page.dart:19:53 - deprecated_member_use
+   info - Parameter 'key' could be a super parameter - lib\screens\settings_screen.dart:10:9 - use_super_parameters
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\settings_screen.dart:159:64 - deprecated_member_use
+   info - 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre - lib\screens\settings_screen.dart:178:7 - deprecated_member_use
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\screens\settings_screen.dart:476:39 - use_build_context_synchronously
+   info - Don't invoke 'print' in production code - lib\services\auth_service.dart:33:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\auth_service.dart:60:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\auth_service.dart:69:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\auth_service.dart:71:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\firestore_service.dart:21:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\firestore_service.dart:35:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\firestore_service.dart:46:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\firestore_service.dart:59:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\firestore_service.dart:79:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\firestore_service.dart:93:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\firestore_service.dart:111:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\firestore_service.dart:130:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\firestore_service.dart:144:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\firestore_service.dart:159:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\firestore_service.dart:174:7 - avoid_print
+   info - Parameter 'key' could be a super parameter - lib\widgets\app_header.dart:5:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\widgets\bottom_nav_bar.dart:10:9 - use_super_parameters
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\bottom_nav_bar.dart:26:33 - deprecated_member_use
+   info - Parameter 'key' could be a super parameter - lib\widgets\category_card.dart:9:9 - use_super_parameters
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\category_card.dart:38:86 - deprecated_member_use
+   info - Parameter 'key' could be a super parameter - lib\widgets\product_card.dart:11:9 - use_super_parameters
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\product_card.dart:28:33 - deprecated_member_use
+   info - Parameter 'key' could be a super parameter - lib\widgets\promo_banner.dart:6:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\widgets\search_bar_widget.dart:5:9 - use_super_parameters
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\search_bar_widget.dart:15:60 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\search_bar_widget.dart:18:35 - deprecated_member_use
+   info - Use interpolation to compose strings and values - recolor.dart:38:22 - prefer_interpolation_to_compose_strings
+   info - Don't invoke 'print' in production code - recolor.dart:41:9 - avoid_print
+
+flutter : 85 issues 
+found. (ran in 13.7s)
+At line:1 char:1
++ flutter analyze 2>&1 | 
+Out-File -FilePath 
+analyze_output.txt 
+-Encodin ...
++ ~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: (8  
+  5 issues found. (ran    
+ in 13.7s):String) [],    
+ RemoteException
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
