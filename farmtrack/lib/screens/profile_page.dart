@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../utils/constants.dart';
 import '../services/auth_service.dart';
+import '../services/firestore_service.dart';
 import 'orders_page.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -8,6 +10,8 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
       appBar: AppBar(
@@ -26,31 +30,40 @@ class ProfilePage extends StatelessWidget {
             children: [
               // Avatar ID Card
               Center(
-                child: Column(
-                  children: [
-                    const CircleAvatar(
-                      radius: 50,
-                      backgroundColor: AppColors.categoryBgGreen,
-                      child: Icon(Icons.person,
-                          size: 50, color: AppColors.primaryGreen),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Jane Doe',
-                      style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary),
-                    ),
-                    const SizedBox(height: 4),
-                    const Text(
-                      '+91 98765 43210',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
+                child: FutureBuilder<Map<String, dynamic>?>(
+                  future: user != null ? FirestoreService().getUser(user.uid) : Future.value(null),
+                  builder: (context, snapshot) {
+                    final userData = snapshot.data;
+                    final displayName = userData?['name']?.toString() ?? user?.displayName ?? user?.email ?? 'Guest User';
+                    final displayPhone = userData?['phone']?.toString() ?? user?.phoneNumber ?? (user?.uid != null ? 'UID: ${user!.uid}' : 'No UID/Phone');
+
+                    return Column(
+                      children: [
+                        const CircleAvatar(
+                          radius: 50,
+                          backgroundColor: AppColors.categoryBgGreen,
+                          child: Icon(Icons.person,
+                              size: 50, color: AppColors.primaryGreen),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          displayName,
+                          style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          displayPhone,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 32),

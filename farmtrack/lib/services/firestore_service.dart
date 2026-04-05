@@ -81,6 +81,20 @@ class FirestoreService {
     }
   }
 
+  /// Gets a user profile by UID
+  Future<Map<String, dynamic>?> getUser(String uid) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> doc = await _db.collection(_usersCollection).doc(uid).get();
+      if (doc.exists) {
+        return doc.data();
+      }
+      return null;
+    } catch (e) {
+      print('Error in getUser: $e');
+      return null;
+    }
+  }
+
   /// Gets a user profile by phone number
   Future<Map<String, dynamic>?> getUserByPhone(String phone) async {
     try {
