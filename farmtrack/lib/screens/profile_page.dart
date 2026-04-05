@@ -8,6 +8,9 @@ import 'settings_screen.dart';
 import 'address/address_screen.dart';
 import 'payment/saved_payments_screen.dart';
 
+import 'notifications_page.dart';
+import 'chat/chat_screen.dart';
+
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -97,7 +100,12 @@ class ProfilePage extends StatelessWidget {
                 );
               }),
               const Divider(height: 1),
-              _buildProfileOption(context, Icons.notifications_outlined, 'Notifications'),
+              _buildProfileOption(context, Icons.notifications_outlined, 'Notifications', onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const NotificationsPage()),
+                );
+              }),
               const Divider(height: 1),
               _buildProfileOption(context, Icons.settings_outlined, 'Settings', onTap: () {
                 Navigator.push(
@@ -106,7 +114,19 @@ class ProfilePage extends StatelessWidget {
                 );
               }),
               const Divider(height: 1),
-              _buildProfileOption(context, Icons.help_outline, 'Help & Support'),
+              _buildProfileOption(context, Icons.help_outline, 'Help & Support', onTap: () {
+                if (user != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatScreen(
+                        userId: user.uid,
+                        userName: 'FarmFresh Support',
+                      ),
+                    ),
+                  );
+                }
+              }),
               const SizedBox(height: 32),
               
               SizedBox(
