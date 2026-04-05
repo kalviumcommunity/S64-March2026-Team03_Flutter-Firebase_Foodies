@@ -12,13 +12,15 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _emailOrPhoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthService _authService = AuthService();
 
+  bool _obscurePassword = true;
+
   @override
   void dispose() {
-    _emailController.dispose();
+    _emailOrPhoneController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -61,28 +63,32 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 48),
                 _buildTextField(
-                  controller: _emailController,
-                  label: 'Email',
-                  icon: Icons.email_outlined,
-                  keyboardType: TextInputType.emailAddress,
+                  controller: _emailOrPhoneController,
+                  label: 'Email or Phone Number',
+                  icon: Icons.person_outline,
                 ),
                 const SizedBox(height: 16),
                 _buildTextField(
                   controller: _passwordController,
                   label: 'Password',
                   icon: Icons.lock_outline,
-                  obscureText: true,
+                  obscureText: _obscurePassword,
+                  onToggleVisibility: () {
+                    setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    });
+                  },
                 ),
                 const SizedBox(height: 32),
                 ElevatedButton(
                   onPressed: () async {
-                    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+                    if (_emailOrPhoneController.text.isEmpty || _passwordController.text.isEmpty) {
                       print('Please fill all fields');
                       return;
                     }
                     
                     User? user = await _authService.signIn(
-                      _emailController.text,
+                      _emailOrPhoneController.text,
                       _passwordController.text,
                     );
                     
@@ -111,8 +117,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Text(
                       "Don't have an account?",
@@ -153,6 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
     required IconData icon,
     bool obscureText = false,
     TextInputType keyboardType = TextInputType.text,
+    VoidCallback? onToggleVisibility,
   }) {
     return TextField(
       controller: controller,
@@ -163,6 +171,15 @@ class _LoginScreenState extends State<LoginScreen> {
         labelText: label,
         labelStyle: GoogleFonts.poppins(color: Colors.grey.shade600),
         prefixIcon: Icon(icon, color: const Color(0xFF2E7D32)),
+        suffixIcon: onToggleVisibility != null 
+          ? IconButton(
+              icon: Icon(
+                obscureText ? Icons.visibility_off : Icons.visibility,
+                color: Colors.grey.shade600,
+              ),
+              onPressed: onToggleVisibility,
+            )
+          : null,
         filled: true,
         fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),

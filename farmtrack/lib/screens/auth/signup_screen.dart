@@ -11,14 +11,21 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   final AuthService _authService = AuthService();
 
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
+    _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -62,6 +69,12 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 const SizedBox(height: 40),
                 _buildTextField(
+                  controller: _nameController,
+                  label: 'Full Name',
+                  icon: Icons.person_outline,
+                ),
+                const SizedBox(height: 16),
+                _buildTextField(
                   controller: _emailController,
                   label: 'Email',
                   icon: Icons.email_outlined,
@@ -69,22 +82,41 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 const SizedBox(height: 16),
                 _buildTextField(
+                  controller: _phoneController,
+                  label: 'Phone Number',
+                  icon: Icons.phone_outlined,
+                  keyboardType: TextInputType.phone,
+                ),
+                const SizedBox(height: 16),
+                _buildTextField(
                   controller: _passwordController,
                   label: 'Password',
                   icon: Icons.lock_outline,
-                  obscureText: true,
+                  obscureText: _obscurePassword,
+                  onToggleVisibility: () {
+                    setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    });
+                  },
                 ),
                 const SizedBox(height: 16),
                 _buildTextField(
                   controller: _confirmPasswordController,
                   label: 'Confirm Password',
                   icon: Icons.lock_outline,
-                  obscureText: true,
+                  obscureText: _obscureConfirmPassword,
+                  onToggleVisibility: () {
+                    setState(() {
+                      _obscureConfirmPassword = !_obscureConfirmPassword;
+                    });
+                  },
                 ),
                 const SizedBox(height: 32),
                 ElevatedButton(
                   onPressed: () async {
-                    if (_emailController.text.isEmpty || 
+                    if (_nameController.text.isEmpty ||
+                        _emailController.text.isEmpty || 
+                        _phoneController.text.isEmpty ||
                         _passwordController.text.isEmpty || 
                         _confirmPasswordController.text.isEmpty) {
                       print('Please fill all fields');
@@ -99,6 +131,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     User? user = await _authService.signUp(
                       _emailController.text,
                       _passwordController.text,
+                      name: _nameController.text.trim(),
+                      phone: _phoneController.text.trim(),
                     );
                     
                     if (user != null) {
@@ -126,8 +160,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Text(
                       'Already have an account?',
@@ -163,6 +198,7 @@ class _SignupScreenState extends State<SignupScreen> {
     required IconData icon,
     bool obscureText = false,
     TextInputType keyboardType = TextInputType.text,
+    VoidCallback? onToggleVisibility,
   }) {
     return TextField(
       controller: controller,
@@ -173,6 +209,15 @@ class _SignupScreenState extends State<SignupScreen> {
         labelText: label,
         labelStyle: GoogleFonts.poppins(color: Colors.grey.shade600),
         prefixIcon: Icon(icon, color: const Color(0xFF2E7D32)),
+        suffixIcon: onToggleVisibility != null 
+          ? IconButton(
+              icon: Icon(
+                obscureText ? Icons.visibility_off : Icons.visibility,
+                color: Colors.grey.shade600,
+              ),
+              onPressed: onToggleVisibility,
+            )
+          : null,
         filled: true,
         fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
