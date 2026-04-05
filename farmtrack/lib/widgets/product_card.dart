@@ -66,11 +66,11 @@ class ProductCard extends StatelessWidget {
             Text(
               quantity,
               style: TextStyle(
-                fontSize: 13,
+                fontSize: 12,
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             // Price and Add button
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

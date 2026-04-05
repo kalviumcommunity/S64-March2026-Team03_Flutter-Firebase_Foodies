@@ -6,6 +6,7 @@ import 'firebase_options.dart';
 import 'core/auth_wrapper.dart';
 import 'services/cart_service.dart';
 import 'services/order_service.dart';
+import 'services/address_service.dart';
 import 'providers/theme_provider.dart';
 
 void main() async {
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => CartService()),
         ChangeNotifierProvider(create: (context) => OrderService()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => AddressService()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {

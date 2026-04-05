@@ -112,4 +112,67 @@ class FirestoreService {
       return null;
     }
   }
+
+  // --- ADDRESS METHODS --- //
+  
+  final String _addressesSubCollection = 'addresses';
+
+  /// Adds a address to a user's collection in Firestore.
+  Future<String> addAddress(String uid, Map<String, dynamic> addressData) async {
+    try {
+      DocumentReference docRef = await _db
+          .collection(_usersCollection)
+          .doc(uid)
+          .collection(_addressesSubCollection)
+          .add(addressData);
+      return docRef.id;
+    } catch (e) {
+      print('Error in addAddress: $e');
+      throw Exception('Failed to save address to backend.');
+    }
+  }
+
+  /// Gets a real-time stream of all addresses for a user.
+  Stream<QuerySnapshot<Map<String, dynamic>>> getAddresses(String uid) {
+    try {
+      return _db
+          .collection(_usersCollection)
+          .doc(uid)
+          .collection(_addressesSubCollection)
+          .snapshots();
+    } catch (e) {
+      print('Error in getAddresses: $e');
+      throw Exception('Failed to fetch addresses stream.');
+    }
+  }
+
+  /// Deletes a specific address for a user.
+  Future<void> deleteAddress(String uid, String addressId) async {
+    try {
+      await _db
+          .collection(_usersCollection)
+          .doc(uid)
+          .collection(_addressesSubCollection)
+          .doc(addressId)
+          .delete();
+    } catch (e) {
+      print('Error in deleteAddress: $e');
+      throw Exception('Failed to delete address.');
+    }
+  }
+
+  /// Updates a specific address for a user.
+  Future<void> updateAddress(String uid, String addressId, Map<String, dynamic> addressData) async {
+    try {
+      await _db
+          .collection(_usersCollection)
+          .doc(uid)
+          .collection(_addressesSubCollection)
+          .doc(addressId)
+          .update(addressData);
+    } catch (e) {
+      print('Error in updateAddress: $e');
+      throw Exception('Failed to update address.');
+    }
+  }
 }

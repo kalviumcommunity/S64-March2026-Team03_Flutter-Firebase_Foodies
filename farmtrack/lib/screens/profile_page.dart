@@ -5,6 +5,7 @@ import '../services/auth_service.dart';
 import '../services/firestore_service.dart';
 import 'orders_page.dart';
 import 'settings_screen.dart';
+import 'address/address_screen.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -81,7 +82,12 @@ class ProfilePage extends StatelessWidget {
                 );
               }),
               const Divider(height: 1),
-              _buildProfileOption(context, Icons.location_on_outlined, 'Delivery Addresses'),
+              _buildProfileOption(context, Icons.location_on_outlined, 'Delivery Addresses', onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AddressScreen()),
+                );
+              }),
               const Divider(height: 1),
               _buildProfileOption(context, Icons.account_balance_wallet_outlined, 'Payment Methods'),
               const Divider(height: 1),
