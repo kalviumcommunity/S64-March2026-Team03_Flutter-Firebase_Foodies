@@ -45,39 +45,53 @@ class _PromoBannerState extends State<PromoBanner> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      color: AppColors.alertRed,
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      child: SingleChildScrollView(
-        controller: _scrollController,
-        scrollDirection: Axis.horizontal,
-        physics: const NeverScrollableScrollPhysics(), // Prevent manual scrolling
-        child: const Row(
-          children: [
-            SizedBox(width: 16),
-            Text(
-              "One Stop Shop For All Your Needs!!",
-              style: AppTextStyles.bannerText,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppConstants.defaultPadding),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [AppColors.primaryGreen, Color(0xFF4A6B2F)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(16.0),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primaryGreen.withOpacity(0.3),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
-            SizedBox(width: 80), // Gap before repeat
-            Text(
-              "One Stop Shop For All Your Needs!!",
-              style: AppTextStyles.bannerText,
-            ),
-            SizedBox(width: 80),
-            Text(
-              "One Stop Shop For All Your Needs!!",
-              style: AppTextStyles.bannerText,
-            ),
-            SizedBox(width: 80),
-            Text(
-              "One Stop Shop For All Your Needs!!",
-              style: AppTextStyles.bannerText,
-            ),
-            SizedBox(width: 16),
           ],
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 14.0),
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          scrollDirection: Axis.horizontal,
+          physics: const NeverScrollableScrollPhysics(),
+          child: Row(
+            children: [
+              const SizedBox(width: 16),
+              Text(
+                "🌿 One Stop Shop For All Your Fresh Farm Needs!!",
+                style: AppTextStyles.bannerText.copyWith(
+                  letterSpacing: 0.5,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(width: 80),
+              Text(
+                "🌿 One Stop Shop For All Your Fresh Farm Needs!!",
+                style: AppTextStyles.bannerText.copyWith(
+                  letterSpacing: 0.5,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(width: 80),
+            ],
+          ),
         ),
       ),
     );

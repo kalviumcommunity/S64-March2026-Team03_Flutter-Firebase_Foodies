@@ -27,32 +27,30 @@ class CategoryCard extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Image Container
+            // Soft Background Container
             Expanded(
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                width: 100,
+                width: 75,
+                height: 75,
                 decoration: BoxDecoration(
-                  color: backgroundColor,
-                  borderRadius: BorderRadius.circular(AppConstants.borderRadius),
-                  border: isSelected 
-                    ? Border.all(color: AppColors.primaryGreen, width: 2)
-                    : null,
+                  color: isSelected ? AppColors.primaryGreen : backgroundColor.withOpacity(0.5),
+                  shape: BoxShape.circle,
                   boxShadow: isSelected ? [
                     BoxShadow(
                       color: AppColors.primaryGreen.withOpacity(0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
                     )
                   ] : null,
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(AppConstants.borderRadius),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
                   child: Image.network(
                     imageUrl,
                     fit: BoxFit.contain,
                     errorBuilder: (context, error, stackTrace) {
-                      return Icon(Icons.shopping_basket, color: AppColors.primaryGreen.withOpacity(0.5), size: 40);
+                      return Icon(Icons.eco_rounded, color: AppColors.primaryGreen.withOpacity(0.5), size: 30);
                     },
                   ),
                 ),
@@ -64,8 +62,8 @@ class CategoryCard extends StatelessWidget {
               title,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 14,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                fontSize: 13,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
                 color: isSelected ? AppColors.primaryGreen : Theme.of(context).colorScheme.onSurface,
               ),
               maxLines: 2,
