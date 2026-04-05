@@ -323,4 +323,64 @@ class FirestoreService {
       throw Exception('Failed to delete payment method.');
     }
   }
+
+  // --- CHAT METHODS --- //
+
+  final String _chatsCollection = 'chats';
+
+  /// Sends a message and updates the top-level chat document.
+  Future<void> sendMessage({
+    required String userId,
+    required String senderId,
+    required String message,
+  }) async {
+    try {
+      final chatRef = _db.collection(_chatsCollection).doc(userId);
+      
+      // Update top-level chat to show in admin's list
+      await chatRef.set({
+        'userId': userId,
+        'lastMessage': message,
+        'lastMessageTime': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+
+      // Add actual message to subcollection
+      await chatRef.collection('messages').add({
+        'senderId': senderId,
+        'message': message,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Error in sendMessage: $e');
+      throw Exception('Failed to send message.');
+    }
+  }
+
+  /// Gets real-time messages for a specific chat.
+  Stream<QuerySnapshot<Map<String, dynamic>>> getChatMessages(String userId) {
+    try {
+      return _db
+          .collection(_chatsCollection)
+          .doc(userId)
+          .collection('messages')
+          .orderBy('timestamp', descending: true)
+          .snapshots();
+    } catch (e) {
+      print('Error in getChatMessages: $e');
+      throw Exception('Failed to fetch messages.');
+    }
+  }
+
+  /// Gets all chat rooms for admin view.
+  Stream<QuerySnapshot<Map<String, dynamic>>> getChatRooms() {
+    try {
+      return _db
+          .collection(_chatsCollection)
+          .orderBy('lastMessageTime', descending: true)
+          .snapshots();
+    } catch (e) {
+      print('Error in getChatRooms: $e');
+      throw Exception('Failed to fetch chat list.');
+    }
+  }
 }

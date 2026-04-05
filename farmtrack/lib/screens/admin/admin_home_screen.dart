@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../services/firestore_service.dart';
 import 'admin_order_details_screen.dart';
+import 'admin_chat_list_screen.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key});
@@ -58,21 +59,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: _firestoreService.getOrders(),
         builder: (context, snapshot) {
-          // Handle Loading State
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(color: Color(0xFF2E7D32)),
-            );
+            return const Center(child: CircularProgressIndicator(color: Color(0xFF2E7D32)));
           }
 
-          // Handle Error State
           if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                'Error: ${snapshot.error}',
-                style: GoogleFonts.poppins(color: Colors.red),
-              ),
-            );
+            return Center(child: Text('Error: ${snapshot.error}', style: GoogleFonts.poppins(color: Colors.red)));
           }
 
           final orders = snapshot.data?.docs ?? [];
@@ -81,13 +73,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 1. Header Section with Greeting & Real Counts
                 _buildGreetingHeader(context, orders),
-                
-                // 2. Stats Section based on REAL data
                 _buildStatsSection(orders),
-                
-                // 3. Orders Section Title
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
                   child: Text(
@@ -99,8 +86,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     ),
                   ),
                 ),
-                
-                // 4. Real Order List or Empty State
                 orders.isEmpty 
                   ? _buildEmptyState()
                   : ListView.builder(
@@ -111,11 +96,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                       itemBuilder: (context, index) {
                         final orderDoc = orders[index];
                         final orderData = orderDoc.data();
-                        orderData['id'] = orderDoc.id; // Inject ID for the card
+                        orderData['id'] = orderDoc.id;
                         return _buildOrderCard(context, orderData);
                       },
                     ),
-                
                 const SizedBox(height: 30),
               ],
             ),
@@ -140,22 +124,40 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.arrow_back_ios_new, color: Color(0xFF1B5E20), size: 20),
-                style: IconButton.styleFrom(
-                  backgroundColor: Colors.white54,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.arrow_back_ios_new, color: Color(0xFF1B5E20), size: 20),
+                    style: IconButton.styleFrom(
+                      backgroundColor: Colors.white54,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Hello Admin',
+                    style: GoogleFonts.poppins(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF1B5E20),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 12),
-              Text(
-                'Hello Admin',
-                style: GoogleFonts.poppins(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF1B5E20),
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const AdminChatListScreen()),
+                  );
+                },
+                icon: const Icon(Icons.chat_bubble_outline_rounded, color: Color(0xFF1B5E20)),
+                style: IconButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
               ),
             ],
@@ -260,8 +262,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     final status = order['status'] ?? 'placed';
     final statusColor = _getStatusColor(status);
     final statusIcon = _getStatusIcon(status);
-    
-    // Attempt to get email, fallback to userId if missing
     final userLabel = order['email'] ?? order['userId'] ?? 'Unknown User';
 
     return Container(
@@ -290,20 +290,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   children: [
                     Text(
                       order['id'],
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: const Color(0xFF2C3E50),
-                      ),
+                      style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14, color: const Color(0xFF2C3E50)),
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 2),
                     Text(
                       userLabel,
-                      style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        color: Colors.grey.shade500,
-                      ),
+                      style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey.shade500),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
@@ -323,11 +316,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     const SizedBox(width: 4),
                     Text(
                       _getStatusLabel(status),
-                      style: GoogleFonts.poppins(
-                        color: statusColor,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: GoogleFonts.poppins(color: statusColor, fontSize: 10, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -345,17 +334,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Total Price',
-                      style: GoogleFonts.poppins(fontSize: 11, color: Colors.grey.shade400),
-                    ),
+                    Text('Total Price', style: GoogleFonts.poppins(fontSize: 11, color: Colors.grey.shade400)),
                     Text(
                       '₹ ${(order['totalPrice'] ?? 0.0).toStringAsFixed(2)}',
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: const Color(0xFF2E7D32),
-                      ),
+                      style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18, color: const Color(0xFF2E7D32)),
                     ),
                   ],
                 ),
@@ -365,9 +347,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => AdminOrderDetailScreen(order: order),
-                    ),
+                    MaterialPageRoute(builder: (context) => AdminOrderDetailScreen(order: order)),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -377,10 +357,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 ),
-                child: Text(
-                  'View Details',
-                  style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.bold),
-                ),
+                child: Text('View Details', style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.bold)),
               ),
             ],
           ),

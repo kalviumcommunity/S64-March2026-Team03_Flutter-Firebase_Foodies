@@ -7,6 +7,7 @@ import 'admin_home_screen.dart';
 import 'admin_analytics_screen.dart';
 import 'admin_customers_screen.dart';
 import 'admin_placeholder_screen.dart';
+import 'admin_chat_list_screen.dart';
 
 class AdminMainScreen extends StatelessWidget {
   const AdminMainScreen({super.key});
@@ -301,11 +302,7 @@ class AdminMainScreen extends StatelessWidget {
                 icon: Icons.sensors_rounded,
               )));
             } else if (title == 'Support') {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminPlaceholderScreen(
-                title: 'Admin Support',
-                message: 'Intercom & Chat Support system coming soon',
-                icon: Icons.help_center_rounded,
-              )));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminChatListScreen()));
             }
           },
           borderRadius: BorderRadius.circular(24),
